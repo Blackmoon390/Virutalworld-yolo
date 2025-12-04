@@ -3,9 +3,9 @@ import numpy as np
 
 # --- your RGB glow color variable ---
 r, g, b =125, 143, 255
-# ------------------------------------
 
-# Read binary mask
+
+
 mask = cv2.imread(r"C:\python\computer_vision\virtual_world\upated.png", cv2.IMREAD_GRAYSCALE)
 
 # 1. Bigger dilation for wider glow
