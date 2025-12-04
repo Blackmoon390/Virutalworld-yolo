@@ -48,7 +48,6 @@ while cam.isOpened():
 
     results=model(frame,verbose=False,stream=True)
     frame2=np.zeros(frame.shape[:2],dtype='uint8')
-    # backgroud_texture=cv2.resize(backgroud_texture,(frame.shape[1],frame.shape[0]))
 
     for r in results:
         if r.masks is not None:
@@ -58,7 +57,7 @@ while cam.isOpened():
                    mask = data.cpu().numpy().astype('uint8')*255
                    mask=cv2.resize(mask,(640,480))
     mask_not=cv2.bitwise_not(mask)
-    # backgroud_texture_mask=cv2.bitwise_and(backgroud_texture,backgroud_texture,mask=mask)
+ 
     print(mask.shape,bluecolour.shape)
     person_mask_colour=apply_blue_black_noise(bluecolour, mask)
 
