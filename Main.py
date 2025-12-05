@@ -34,10 +34,14 @@ while cam.isOpened():
                    mask=cv2.resize(mask,(640,480))
     mask_not=cv2.bitwise_not(mask)
  
-    print(mask.shape,bluecolour.shape)
-    # person_mask_colour=tpm.apply_blue_black_noise(bluecolour, mask)
+    
+    person_mask_colour=tpm.apply_blue_black_noise(bluecolour, mask)
+    glowframe=tpm.glow(mask)
+    glowframe=cv2.resize(glowframe,(480,640))
+    print(person_mask_colour.shape,glowframe.shape)
+    overall=cv2.add(person_mask_colour,glowframe)
 
-    cv2.imshow('mask',person_mask_colour)       
+    cv2.imshow('mask',overall)       
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
