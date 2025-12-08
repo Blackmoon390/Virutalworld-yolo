@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from ultralytics import YOLO
 import torch
-# import textureprocessmodule as tpm
+import textureprocessmodule as tpm
 
 
 cpu= "cuda" if torch.cuda.is_available() else "cpu"
