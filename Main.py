@@ -8,7 +8,7 @@ import textureprocessmodule as tpm
 cpu= "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using device: {cpu}")
 
-# model=YOLO("yolo11n-seg.pt")
+model=YOLO("yolo11n-seg.pt")
 
 bluecolour=np.full((640,480,3),(24, 34, 200),dtype='uint8')
 bluecolour=cv2.cvtColor(bluecolour,cv2.COLOR_BGR2RGB)
