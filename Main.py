@@ -24,6 +24,8 @@ while cam.isOpened():
     frame2=np.zeros(frame.shape[:2],dtype='uint8')
 
     for r in results:
+        masks=r.masks
+        
         if r.masks is not None:
             
             for cls,data in zip(r.names,r.masks.data):
