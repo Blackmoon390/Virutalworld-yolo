@@ -33,15 +33,20 @@ while cam.isOpened():
                    global mask
                    mask = data.cpu().numpy().astype('uint8')*255
                    x1,y1,x2,y2=box.int().tolist()
+                   yolo_bbox = (x1, y1, x2, y2)
+                   mask = tpm.resize_mask_keep_width(mask, yolo_bbox,100,600)
+                
                    print(f"mask:{mask.shape}   frame:{frame2.shape}")
              
 
                    
     mask_not=cv2.bitwise_not(mask)
     person_mask_colour=tpm.apply_blue_black_noise(bluecolour, mask)
-    person_mask_colour=cv2.resize(person_mask_colour,(1280,480))
+    # person_mask_colour=cv2.resize(person_mask_colour,(1280,480))
     glowframe=tpm.glow(mask)
-    glowframe=cv2.resize(glowframe,(1280,480))
+    # glowframe=cv2.resize(glowframe,(1280,480))
+
+    print(person_mask_colour.shape,glowframe.shape)
     
     overall=cv2.add(person_mask_colour,glowframe)
 
