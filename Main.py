@@ -24,16 +24,17 @@ while cam.isOpened():
     frame2=np.zeros(frame.shape[:2],dtype='uint8')
 
     for r in results:
-        # masks=r.masks
+        
         
         if r.masks is not None:
             
-            for cls,data in zip(r.names,r.masks.data):
+            for cls,data,box in zip(r.names,r.masks.data,r.boxes.xyxy):
                 if int(cls) == 0:
                    global mask
                    mask = data.cpu().numpy().astype('uint8')*255
-                   print(mask.shape)
-                   mask=cv2.resize(mask,(480,640))
+                   x1,y1,x2,y2=box.int().tolist()
+                   print(f"mask:{mask.shape}   frame:{frame2.shape}")
+             
 
                    
     mask_not=cv2.bitwise_not(mask)
@@ -41,7 +42,7 @@ while cam.isOpened():
     person_mask_colour=cv2.resize(person_mask_colour,(1280,480))
     glowframe=tpm.glow(mask)
     glowframe=cv2.resize(glowframe,(1280,480))
-    print(person_mask_colour.shape,glowframe.shape)
+    
     overall=cv2.add(person_mask_colour,glowframe)
 
     cv2.imshow('mask',overall)       
