@@ -99,7 +99,7 @@ def resize_yolo_object_only3(base_img, bbox, y1=300):
     new_y2 = y1 + target_h   # always y1 + 500
 
     return resized, (new_x1, new_y1, new_x2, new_y2)
-def resize_mask_only(mask, bbox, y1, y2):
+def resize_mask_only(mask, bbox, y1=100, y2=600):
     x1, y_top, x2, y_bottom = bbox
 
     H, W = mask.shape[:2]
