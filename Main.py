@@ -24,7 +24,7 @@ while cam.isOpened():
     frame2=np.zeros(frame.shape[:2],dtype='uint8')
 
     for r in results:
-        masks=r.masks
+        # masks=r.masks
         
         if r.masks is not None:
             
@@ -32,6 +32,7 @@ while cam.isOpened():
                 if int(cls) == 0:
                    global mask
                    mask = data.cpu().numpy().astype('uint8')*255
+                   print(mask.shape)
                    mask=cv2.resize(mask,(480,640))
 
                    
