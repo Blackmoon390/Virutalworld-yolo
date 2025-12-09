@@ -100,27 +100,28 @@ def resize_yolo_object_only3(base_img, bbox, y1=300):
 
     return resized, (new_x1, new_y1, new_x2, new_y2)
 
-def resize_yolo_object_only(base_img, bbox, y1=300, y2=800):
+def resize_mask_only(mask, bbox, y1=300, y2=600):
     x1, y_top, x2, y_bottom = bbox
 
-    # Crop original object
-    obj = base_img[y_top:y_bottom, x1:x2].copy()
-    oh, ow = obj.shape[:2]
+    # Extract mask object
+    obj_mask = mask[y_top:y_bottom, x1:x2].copy()
+    oh, ow = obj_mask.shape[:2]
 
-    # Dynamic target height based on y1,y2
+    # New height based on y1,y2
     target_h = y2 - y1
 
-    # Scale width based on target height
+    # Scale width
     scale = target_h / oh
     new_w = int(ow * scale)
 
-    resized = cv2.resize(obj, (new_w, target_h))
+    # Resize mask object
+    resized_mask = cv2.resize(obj_mask, (new_w, target_h))
 
-    # Updated bbox with dynamic height
-    new_x1 = x1
-    new_x2 = x1 + new_w
-    new_y1 = y1
-    new_y2 = y2   # exactly what user gave
+    # Create empty final mask (same size as original)
+    final_mask = np.zeros_like(mask)
 
-    return resized, (new_x1, new_y1, new_x2, new_y2)
+    # Paste resized mask into correct Y region
+    final_mask[y1:y2, x1:x1+new_w] = resized_mask
+
+    return final_mask
 
