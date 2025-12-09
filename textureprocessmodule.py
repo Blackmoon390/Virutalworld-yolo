@@ -2,11 +2,11 @@ import cv2
 import numpy as np
 
 def apply_blue_black_noise(frame, mask, block=2):
-    h, w = frame.shape[:2]   # frame = (640, 480, 3)
+    h, w = mask.shape[:2]   # frame = (640, 480, 3)
 
     # --- Fix mask shape mismatch ----
-    if mask.shape != (h, w):
-        mask = cv2.resize(mask, (w, h))
+    if frame.shape != (h, w):
+        frame = cv2.resize(frame, (w, h))
 
     # Make binary mask
     mask = (mask > 0).astype(np.uint8) * 255
