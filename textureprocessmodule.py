@@ -61,7 +61,7 @@ def glow(mask):
 
     return glow_bgr
 
-def resize_yolo_object_only(base_img, bbox, y1=300, y2=600):
+def resize_yolo_object_only2(base_img, bbox, y1=300, y2=600):
     x1, y_top, x2, y_bottom = bbox
 
     obj = base_img[y_top:y_bottom, x1:x2].copy()
@@ -74,3 +74,27 @@ def resize_yolo_object_only(base_img, bbox, y1=300, y2=600):
 
     resized = cv2.resize(obj, (new_w, target_h))
     return resized
+
+def resize_yolo_object_only(base_img, bbox, y1=300, y2=600):
+    x1, y_top, x2, y_bottom = bbox
+
+    # Crop original object
+    obj = base_img[y_top:y_bottom, x1:x2].copy()
+    oh, ow = obj.shape[:2]
+
+    # Target height
+    target_h = y2 - y1  # e.g., 300px
+
+    # Resize based on height
+    scale = target_h / oh
+    new_w = int(ow * scale)
+
+    resized = cv2.resize(obj, (new_w, target_h))
+
+    # NEW BOUNDING BOX
+    new_x1 = x1
+    new_x2 = x1 + new_w   # width changed after scaling
+    new_y1 = y1
+    new_y2 = y2           # same as given
+
+    return resized, (new_x1, new_y1, new_x2, new_y2)
