@@ -2,25 +2,26 @@ import cv2
 import numpy as np
 
 
+base = cv2.imread('main2.png')  
 
-def getvalues():
+
+def getcoordinatevalues():
     with open("settings.txt","r") as lines:
         for line in lines:
-            if line.startswith("Animationframe="):
-                coordinates=line.strip and line.split("=")
-                frame_ratio=coordinates[1]
+            if line.startswith("Animationframesize="):
+                coordinates=line.split("=")
+                frame_ratio=coordinates[1].strip()
+                frame_ratio=int(frame_ratio)/100
                 return frame_ratio
                 
 
-getvalues()
 
-
-base = cv2.imread('main2.png')       
+coordinate=getcoordinatevalues()   
 
 
 
 def blender(overlay):
-    base2=cv2.resize(base,None,fx=0.70,fy=0.70,interpolation=cv2.INTER_AREA)
+    base2=cv2.resize(base,None,fx=coordinate,fy=coordinate,interpolation=cv2.INTER_AREA)
     overlay = cv2.resize(overlay, (640, 500))
     h,w=overlay.shape[:2]
     y=300
