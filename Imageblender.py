@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 
-base = cv2.imread('main2.png')  
+
 
 
 def getcoordinatevalues():
@@ -12,25 +12,40 @@ def getcoordinatevalues():
                 coordinates=line.split("=")
                 frame_ratio=coordinates[1].strip()
                 frame_ratio=int(frame_ratio)/100
+                print(frame_ratio)
                 return frame_ratio
             
-def size_ratio_fitter():
-    frameX,frameY
+
+def resizer(framesize,fitvalue,newframe):
+    new_pointer=int(fitvalue*(newframe/framesize))
+    return new_pointer
+    
+            
+def size_ratio_fitter(newframesize):
+    frameX,frameY=672, 1084  # default animation frame size 50% for fit person
+    y1fit,y2fit=300,480
+    xstart=400
+    newframeX,newframeY=newframesize
+    y1=resizer(frameY,y1fit,newframeY)
+    y2=resizer(frameY,y2fit,newframeY)
+
                 
 
-
+base = cv2.imread('main2.png')  
 coordinate=getcoordinatevalues()   
+base2=cv2.resize(base,None,fx=coordinate,fy=coordinate,interpolation=cv2.INTER_AREA)
+print(base2.shape)
 
 
 
 def blender(overlay):
-    base2=cv2.resize(base,None,fx=coordinate,fy=coordinate,interpolation=cv2.INTER_AREA)
-    overlay = cv2.resize(overlay, (640, 500))
+    
+    # overlay = cv2.resize(overlay, (640, 500))
     h,w=overlay.shape[:2]
     y=300
     x=500
 
-    base = base2[y:y+h, x:x+w]   # FIXED
+    base = base2[y:y+h, x:x+w]   
 
     
 
@@ -50,4 +65,19 @@ def blender(overlay):
 # Blend images only at black regions
     blended = base * (1 - mask_3ch) + overlay * mask_3ch
     blended = blended.astype(np.uint8)
+    return blended
 
+overaly=cv2.imread("upated.png")
+overlay = cv2.resize(overaly, (640, 500))
+
+h,w=overlay.shape[:2]
+print(overlay.shape,base2.shape)
+
+y=200
+x=500
+base2[y:y+h, x:x+w]=blender(overlay)
+
+cv2.imshow('Blended.jpg', base2)
+# cv2.imwrite('Blended2.jpg', blended)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
