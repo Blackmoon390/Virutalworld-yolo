@@ -34,13 +34,13 @@ def glow(mask):
     # Glow color
     r, g, b = 125, 143, 255  # orange, like your example
 
-    # --- ensure mask binary ---
+ 
     if len(mask.shape) == 3:
         mask = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY)
     mask = cv2.threshold(mask, 127, 255, cv2.THRESH_BINARY)[1]
 
     # --- expand area for outer glow ---
-    kernel = np.ones((15, 15), np.uint8)   # increase size = bigger glow
+    kernel = np.ones((35, 35), np.uint8)   # increase size = bigger glow base 15
     expanded = cv2.dilate(mask, kernel, iterations=1)
 
     # --- outer-only area (this prevents inner glow!) ---
@@ -99,39 +99,48 @@ def resize_yolo_object_only3(base_img, bbox, y1=300):
     new_y2 = y1 + target_h   # always y1 + 500
 
     return resized, (new_x1, new_y1, new_x2, new_y2)
-def resize_mask_only(mask, bbox, y1=100, y2=600):
+
+def resize_mask_only_crop(mask, bbox, y1, y2):
     x1, y_top, x2, y_bottom = bbox
 
+    # Crop object
+    obj_mask = mask[y_top:y_bottom, x1:x2].copy()
+    oh, ow = obj_mask.shape[:2]
+
+    target_h = y2 - y1
+    scale = target_h / oh
+    new_w = int(ow * scale)
+
+    resized_mask = cv2.resize(obj_mask, (new_w, target_h))
+    return resized_mask  # only the resized object
+
+import numpy as np
+import cv2
+
+def resize_mask_height_only(mask, bbox, y1, y2):
+    """
+    Resize object mask to target height y2-y1, keep object width same.
+    Returns a mask of shape (y2-y1, frame_width)
+    """
     H, W = mask.shape[:2]
+    x1, y_top, x2, y_bottom = bbox
 
-    # Clip y1,y2 to frame limit
-    y1 = max(0, y1)
-    y2 = min(H, y2)
-
-    # Extract original object
+    # Crop object mask
     obj_mask = mask[y_top:y_bottom, x1:x2].copy()
     oh, ow = obj_mask.shape[:2]
 
     # Target height
     target_h = y2 - y1
-
     if target_h <= 0:
-        return np.zeros_like(mask)  # avoid crash
+        return np.zeros((0, W), dtype=mask.dtype)
 
-    # Resize
-    scale = target_h / oh
-    new_w = int(ow * scale)
+    # Resize height only, keep width
+    resized_mask = cv2.resize(obj_mask, (ow, target_h))
 
-    # Clip width to frame limit
-    if x1 + new_w > W:
-        new_w = W - x1
+    # Create new mask with target height, full frame width
+    final_mask = np.zeros((target_h, W), dtype=mask.dtype)
 
-    resized_mask = cv2.resize(obj_mask, (new_w, target_h))
-
-    # Create empty mask
-    final_mask = np.zeros_like(mask)
-
-    # Paste safely
-    final_mask[y1:y1+target_h, x1:x1+new_w] = resized_mask
+    # Paste resized object at same x position
+    final_mask[:, x1:x1+ow] = resized_mask
 
     return final_mask
