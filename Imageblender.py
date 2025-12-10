@@ -13,6 +13,9 @@ def getcoordinatevalues():
                 frame_ratio=coordinates[1].strip()
                 frame_ratio=int(frame_ratio)/100
                 return frame_ratio
+            
+def size_ratio_fitter():
+    frameX,frameY
                 
 
 
