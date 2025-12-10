@@ -34,7 +34,7 @@ while cam.isOpened():
                    mask = data.cpu().numpy().astype('uint8')*255
                    x1,y1,x2,y2=box.int().tolist()
                    yolo_bbox = (x1, y1, x2, y2)
-                   mask = tpm.resize_mask_keep_width(mask, yolo_bbox,100,600)
+                   mask = tpm.resize_mask_height_only(mask, yolo_bbox,100,600)
                 
                    print(f"mask:{mask.shape}   frame:{frame2.shape}")
              
