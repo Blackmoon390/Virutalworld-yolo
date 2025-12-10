@@ -3,17 +3,14 @@ import numpy as np
 
 
 
-
-
 def getcoordinatevalues():
     with open("settings.txt","r") as lines:
         for line in lines:
             if line.startswith("Animationframesize="):
                 coordinates=line.split("=")
                 frame_ratio=coordinates[1].strip()
-                frame_ratio=int(frame_ratio)/100
-                print(frame_ratio)
-                return frame_ratio
+                frame_ratio=int(frame_ratio)/100            
+    return frame_ratio
             
 
 def resizer(framesize,fitvalue,newframe):
@@ -28,13 +25,15 @@ def size_ratio_fitter(newframesize):
     newframeX,newframeY=newframesize
     y1=resizer(frameY,y1fit,newframeY)
     y2=resizer(frameY,y2fit,newframeY)
+    x1=resizer(frameX,xstart,newframeX)
+    return y1,y2,x1
 
                 
 
 base = cv2.imread('main2.png')  
 coordinate=getcoordinatevalues()   
 base2=cv2.resize(base,None,fx=coordinate,fy=coordinate,interpolation=cv2.INTER_AREA)
-print(base2.shape)
+xstartpointer,y1,y2=size_ratio_fitter(base2.shape[:2])
 
 
 
