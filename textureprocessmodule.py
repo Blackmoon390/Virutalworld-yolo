@@ -75,31 +75,6 @@ def resize_yolo_object_only2(base_img, bbox, y1=300, y2=600):
     resized = cv2.resize(obj, (new_w, target_h))
     return resized
 
-
-def resize_yolo_object_only3(base_img, bbox, y1=300):
-    x1, y_top, x2, y_bottom = bbox
-
-    # Crop original object
-    obj = base_img[y_top:y_bottom, x1:x2].copy()
-    oh, ow = obj.shape[:2]
-
-    # Fixed height
-    target_h = 500
-
-    # Resize based on height only
-    scale = target_h / oh
-    new_w = int(ow * scale)
-
-    resized = cv2.resize(obj, (new_w, target_h))
-
-    # Updated bbox (height always 500)
-    new_x1 = x1
-    new_x2 = x1 + new_w
-    new_y1 = y1
-    new_y2 = y1 + target_h   # always y1 + 500
-
-    return resized, (new_x1, new_y1, new_x2, new_y2)
-
 def resize_mask_only_crop(mask, bbox, y1, y2):
     x1, y_top, x2, y_bottom = bbox
 
