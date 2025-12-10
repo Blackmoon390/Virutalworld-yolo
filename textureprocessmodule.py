@@ -114,14 +114,10 @@ def resize_mask_only_crop(mask, bbox, y1, y2):
     resized_mask = cv2.resize(obj_mask, (new_w, target_h))
     return resized_mask  # only the resized object
 
-import numpy as np
-import cv2
+
 
 def resize_mask_height_only(mask, bbox, y1, y2):
-    """
-    Resize object mask to target height y2-y1, keep object width same.
-    Returns a mask of shape (y2-y1, frame_width)
-    """
+   
     H, W = mask.shape[:2]
     x1, y_top, x2, y_bottom = bbox
 
