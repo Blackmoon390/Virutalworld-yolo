@@ -21,7 +21,7 @@ def resizer(framesize,fitvalue,newframe):
 def size_ratio_fitter(newframesize):
     frameX,frameY=672, 1084  # default animation frame size 50% for fit person
     y1fit,y2fit=300,515
-    xstart=470
+    xstart=372
     newframeX,newframeY=newframesize
     y1=resizer(frameY,y1fit,newframeY)
     y2=resizer(frameY,y2fit,newframeY)
@@ -37,7 +37,7 @@ y1,y2,xstartpointer=size_ratio_fitter(base2.shape[:2])
 
 
 
-def blender(overlay):
+def blender2(overlay):
     
     # overlay = cv2.resize(overlay, (640, 500))
     h,w=overlay.shape[:2]
@@ -66,17 +66,46 @@ def blender(overlay):
     blended = blended.astype(np.uint8)
     return blended
 
-overaly=cv2.imread("upated.png")
-overlay = cv2.resize(overaly, (640, 500))
+def blender(overlay):
+    
+    h, w = overlay.shape[:2]
+    y = y1
+    x = xstartpointer   # use dynamic pointer!
 
-h,w=overlay.shape[:2]
-print(overlay.shape,base2.shape)
+    base = base2[y:y+h, x:x+w]
 
-y=300
-x=500
-base2[y:y+h, x:x+w]=blender(overlay)
+    # ---- FIX: match overlay to base crop ----
+    overlay = cv2.resize(overlay, (base.shape[1], base.shape[0]))
 
-cv2.imshow('Blended.jpg', base2)
-# cv2.imwrite('Blended2.jpg', blended)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+    lower_black = np.array([0, 0, 0], dtype=np.uint8)
+    upper_black = np.array([70, 10, 10], dtype=np.uint8)
+
+    mask = cv2.inRange(base, lower_black, upper_black)
+    mask = cv2.GaussianBlur(mask, (5,5), 0)
+
+    mask_3ch = cv2.merge([mask, mask, mask]) / 255.0
+
+    blended = base * (1 - mask_3ch) + overlay * mask_3ch
+    basemain=base2.copy()
+    basemain[y:y+h, x:x+w]=blended.astype(np.uint8)
+    return 
+
+
+# height=y2-y1
+
+# print(height)
+
+# overaly=cv2.imread("upated.png")
+# overlay = cv2.resize(overaly, (640, height))
+
+# h,w=overlay.shape[:2]
+# print(overlay.shape,base2.shape)
+
+# y=300
+# x=xstartpointer
+# base2[y:y+h, x:x+w]=blender(overlay)
+
+# cv2.imshow('Blended.jpg', base2)
+# # cv2.imwrite('Blended2.jpg', blended)
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()
