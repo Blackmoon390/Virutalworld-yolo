@@ -88,7 +88,7 @@ def blender(overlay):
     blended = base * (1 - mask_3ch) + overlay * mask_3ch
     basemain=base2.copy()
     basemain[y:y+h, x:x+w]=blended.astype(np.uint8)
-    return 
+    return basemain
 
 
 # height=y2-y1
