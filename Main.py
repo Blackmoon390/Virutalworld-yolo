@@ -53,8 +53,9 @@ while cam.isOpened():
     print(person_mask_colour.shape,glowframe.shape)
     
     overall=cv2.add(person_mask_colour,glowframe)
+    mainframe=ib.blender(overall)
 
-    cv2.imshow('mask',overall)       
+    cv2.imshow('mask',mainframe)       
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
