@@ -3,6 +3,7 @@ import numpy as np
 from ultralytics import YOLO
 import torch
 import textureprocessmodule as tpm
+import Imageblender as ib
 
 
 cpu= "cuda" if torch.cuda.is_available() else "cpu"
@@ -12,6 +13,10 @@ model=YOLO("yolo11n-seg.pt")
 
 bluecolour=np.full((640,480,3),(24, 34, 200),dtype='uint8')
 bluecolour=cv2.cvtColor(bluecolour,cv2.COLOR_BGR2RGB)
+
+topheight=ib.y1
+bottomheight=ib.y2
+
 
 
 
@@ -34,7 +39,7 @@ while cam.isOpened():
                    mask = data.cpu().numpy().astype('uint8')*255
                    x1,y1,x2,y2=box.int().tolist()
                    yolo_bbox = (x1, y1, x2, y2)
-                   mask = tpm.resize_mask_height_only(mask, yolo_bbox,100,600)
+                   mask = tpm.resize_mask_height_only(mask, yolo_bbox,topheight,bottomheight) 
                 
                    print(f"mask:{mask.shape}   frame:{frame2.shape}")
              
@@ -42,9 +47,8 @@ while cam.isOpened():
                    
     mask_not=cv2.bitwise_not(mask)
     person_mask_colour=tpm.apply_blue_black_noise(bluecolour, mask)
-    # person_mask_colour=cv2.resize(person_mask_colour,(1280,480))
     glowframe=tpm.glow(mask)
-    # glowframe=cv2.resize(glowframe,(1280,480))
+   
 
     print(person_mask_colour.shape,glowframe.shape)
     
