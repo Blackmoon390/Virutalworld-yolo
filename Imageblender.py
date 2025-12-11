@@ -20,8 +20,8 @@ def resizer(framesize,fitvalue,newframe):
             
 def size_ratio_fitter(newframesize):
     frameX,frameY=672, 1084  # default animation frame size 50% for fit person
-    y1fit,y2fit=300,480
-    xstart=400
+    y1fit,y2fit=300,515
+    xstart=470
     newframeX,newframeY=newframesize
     y1=resizer(frameY,y1fit,newframeY)
     y2=resizer(frameY,y2fit,newframeY)
@@ -33,7 +33,7 @@ def size_ratio_fitter(newframesize):
 base = cv2.imread('main2.png')  
 coordinate=getcoordinatevalues()   
 base2=cv2.resize(base,None,fx=coordinate,fy=coordinate,interpolation=cv2.INTER_AREA)
-xstartpointer,y1,y2=size_ratio_fitter(base2.shape[:2])
+y1,y2,xstartpointer=size_ratio_fitter(base2.shape[:2])
 
 
 
@@ -42,7 +42,7 @@ def blender(overlay):
     # overlay = cv2.resize(overlay, (640, 500))
     h,w=overlay.shape[:2]
     y=300
-    x=500
+    x=520
 
     base = base2[y:y+h, x:x+w]   
 
@@ -61,7 +61,7 @@ def blender(overlay):
     mask_3ch = cv2.merge([mask, mask, mask])
     mask_3ch = mask_3ch / 255.0  # normalize to 0-1 for blending
 
-# Blend images only at black regions
+
     blended = base * (1 - mask_3ch) + overlay * mask_3ch
     blended = blended.astype(np.uint8)
     return blended
@@ -72,7 +72,7 @@ overlay = cv2.resize(overaly, (640, 500))
 h,w=overlay.shape[:2]
 print(overlay.shape,base2.shape)
 
-y=200
+y=300
 x=500
 base2[y:y+h, x:x+w]=blender(overlay)
 
