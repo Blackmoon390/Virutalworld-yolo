@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 def apply_blue_black_noise(frame, mask, block=2):
-    h, w = mask.shape[:2]   # frame = (640, 480, 3)
+    h, w = mask.shape[:2]  
 
     # --- Fix mask shape mismatch ----
     if frame.shape != (h, w):
@@ -32,7 +32,7 @@ def apply_blue_black_noise(frame, mask, block=2):
 
 def glow(mask):
     # Glow color
-    r, g, b = 125, 143, 255  # orange, like your example
+    r, g, b = 180, 180, 255  # orange, like your example
 
  
     if len(mask.shape) == 3:
@@ -40,14 +40,14 @@ def glow(mask):
     mask = cv2.threshold(mask, 127, 255, cv2.THRESH_BINARY)[1]
 
     # --- expand area for outer glow ---
-    kernel = np.ones((35, 35), np.uint8)   # increase size = bigger glow base 15
+    kernel = np.ones((10, 10), np.uint8)   # increase size = bigger glow base 15
     expanded = cv2.dilate(mask, kernel, iterations=1)
 
     # --- outer-only area (this prevents inner glow!) ---
     outer = cv2.subtract(expanded, mask)
 
     # --- blur to create smooth glow ---
-    glow = cv2.GaussianBlur(outer, (0, 0), sigmaX=20, sigmaY=20)
+    glow = cv2.GaussianBlur(outer, (0, 0), sigmaX=5, sigmaY=5)
 
     # --- normalize for brightness ---
     glow = cv2.normalize(glow, None, 0, 255, cv2.NORM_MINMAX)
@@ -61,57 +61,44 @@ def glow(mask):
 
     return glow_bgr
 
-def resize_yolo_object_only2(base_img, bbox, y1=300, y2=600):
-    x1, y_top, x2, y_bottom = bbox
-
-    obj = base_img[y_top:y_bottom, x1:x2].copy()
-    oh, ow = obj.shape[:2]
-
-    target_h = y2 - y1  # = 300 px
-
-    scale = target_h / oh
-    new_w = int(ow * scale)
-
-    resized = cv2.resize(obj, (new_w, target_h))
-    return resized
-
-def resize_mask_only_crop(mask, bbox, y1, y2):
-    x1, y_top, x2, y_bottom = bbox
-
-    # Crop object
-    obj_mask = mask[y_top:y_bottom, x1:x2].copy()
-    oh, ow = obj_mask.shape[:2]
-
-    target_h = y2 - y1
-    scale = target_h / oh
-    new_w = int(ow * scale)
-
-    resized_mask = cv2.resize(obj_mask, (new_w, target_h))
-    return resized_mask  # only the resized object
 
 
-
-def resize_mask_height_only(mask, bbox, y1, y2):
-   
+def resize_mask_height_only2(mask, bbox, y1, y2):
     H, W = mask.shape[:2]
     x1, y_top, x2, y_bottom = bbox
 
-    # Crop object mask
     obj_mask = mask[y_top:y_bottom, x1:x2].copy()
     oh, ow = obj_mask.shape[:2]
 
-    # Target height
     target_h = y2 - y1
     if target_h <= 0:
         return np.zeros((0, W), dtype=mask.dtype)
 
-    # Resize height only, keep width
-    resized_mask = cv2.resize(obj_mask, (ow, target_h))
+    resized_mask = cv2.resize(obj_mask, (ow, target_h), interpolation=cv2.INTER_NEAREST)
 
-    # Create new mask with target height, full frame width
     final_mask = np.zeros((target_h, W), dtype=mask.dtype)
-
-    # Paste resized object at same x position
     final_mask[:, x1:x1+ow] = resized_mask
+
+    return final_mask
+
+def resize_mask_height_only(mask, bbox, y1, y2, gap=30):
+    H, W = mask.shape[:2]
+    x1, y_top, x2, y_bottom = bbox
+
+    obj_mask = mask[y_top:y_bottom, x1:x2].copy()
+    oh, ow = obj_mask.shape[:2]
+
+    # Normal target height
+    target_h = y2 - y1
+
+    # Resize object to new height
+    resized_mask = cv2.resize(obj_mask, (ow, target_h), interpolation=cv2.INTER_NEAREST)
+
+    # Now add EMPTY SPACE (gap) at the TOP
+    final_h = target_h + gap
+    final_mask = np.zeros((final_h, W), dtype=mask.dtype)
+
+    # Paste mask starting at row "gap"
+    final_mask[gap:gap+target_h, x1:x1+ow] = resized_mask
 
     return final_mask
