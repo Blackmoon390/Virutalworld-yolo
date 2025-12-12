@@ -1,0 +1,10 @@
+Animationframesize=70
+Cameraframe=True
+
+
+#dont change this area
+y1,y2=(120, 150)
+Installedlibraries=True
+#contact and key
+github:https://github.com/Blackmoon390/Virutalworld-yolo
+linkdln:https://www.linkedin.com/in/vishnu-s-42757a310/
