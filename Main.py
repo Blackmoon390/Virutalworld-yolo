@@ -1,0 +1,57 @@
+import cv2
+import numpy as np
+from ultralytics import YOLO
+import torch
+import textureprocessmodule as tpm
+import Imageblender as ib
+
+
+cpu= "cuda" if torch.cuda.is_available() else "cpu"
+print(f"Using device: {cpu}")
+
+model=YOLO("yolo11n-seg.pt")
+
+bluecolour=np.full((640,480,3),(24, 34, 200),dtype='uint8')
+bluecolour=cv2.cvtColor(bluecolour,cv2.COLOR_BGR2RGB)
+
+topheight=ib.y1
+bottomheight=ib.y2
+
+cam=cv2.VideoCapture(0) #"C:\Users\VISHNU\Videos\Screen Recordings\Screen Recording 2025-12-11 164606.mp4"
+
+while cam.isOpened():
+    _,frame=cam.read()
+
+    results=model(frame,verbose=False,stream=True)
+    frame2=np.zeros(frame.shape[:2],dtype='uint8')
+
+    for r in results:
+        if r.masks is not None:
+            
+            for cls,data,box in zip(r.names,r.masks.data,r.boxes.xyxy):
+                if int(cls) == 0:
+                   global mask
+                   mask = data.cpu().numpy().astype('uint8')*255
+                   x1,y1,x2,y2=box.int().tolist()
+                   yolo_bbox = (x1, y1, x2, y2)
+                   mask = tpm.resize_mask_height_only(mask, yolo_bbox,topheight,bottomheight) 
+                
+            
+             
+
+         
+    person_mask_colour=tpm.apply_blue_black_noise(bluecolour, mask)
+    glowframe=tpm.glow(mask)
+   
+
+
+    
+    overall=cv2.add(person_mask_colour,glowframe)
+    mainframe=ib.blender(overall)
+
+    cv2.imshow('mask',mainframe)       
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+cam.release()
+cv2.destroyAllWindows()
