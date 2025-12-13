@@ -20,7 +20,7 @@ def resizer(framesize,fitvalue,newframe):
             
 def size_ratio_fitter(newframesize):
     frameX,frameY=672, 1084  # default animation frame size 50% for fit person
-    y1fit,y2fit=300,515
+    y1fit,y2fit=270,515
     xstart=372
     newframeX,newframeY=newframesize
     y1=resizer(frameY,y1fit,newframeY)
@@ -30,7 +30,7 @@ def size_ratio_fitter(newframesize):
 
                 
 
-base = cv2.imread('main2.png')  
+base = cv2.imread('Backgroud-image.png')  
 coordinate=getcoordinatevalues()   
 base2=cv2.resize(base,None,fx=coordinate,fy=coordinate,interpolation=cv2.INTER_AREA)
 y1,y2,xstartpointer=size_ratio_fitter(base2.shape[:2])
@@ -65,47 +65,40 @@ def blender2(overlay):
     blended = base * (1 - mask_3ch) + overlay * mask_3ch
     blended = blended.astype(np.uint8)
     return blended
-
 def blender(overlay):
-    
     h, w = overlay.shape[:2]
+
     y = y1
-    x = xstartpointer   # use dynamic pointer!
+    x = xstartpointer
 
-    base = base2[y:y+h, x:x+w]
+    basemain = base2.copy()
+    H, W = base2.shape[:2]
 
-    # ---- FIX: match overlay to base crop ----
-    overlay = cv2.resize(overlay, (base.shape[1], base.shape[0]))
+    
+    if x + w > W:
+        w = W - x
+        overlay = overlay[:, :w]
 
+    if y + h > H:
+        h = H - y
+        overlay = overlay[:h, :]
+
+    # crop base
+    base = basemain[y:y+h, x:x+w]
+
+    # black detection
     lower_black = np.array([0, 0, 0], dtype=np.uint8)
     upper_black = np.array([70, 10, 10], dtype=np.uint8)
 
     mask = cv2.inRange(base, lower_black, upper_black)
     mask = cv2.GaussianBlur(mask, (5,5), 0)
 
-    mask_3ch = cv2.merge([mask, mask, mask]) / 255.0
+    mask_3ch = (mask / 255.0)[..., None]
 
     blended = base * (1 - mask_3ch) + overlay * mask_3ch
-    basemain=base2.copy()
-    basemain[y:y+h, x:x+w]=blended.astype(np.uint8)
+    blended = blended.astype(np.uint8)
+
+    # write back safely
+    basemain[y:y+h, x:x+w] = blended
+
     return basemain
-
-
-# height=y2-y1
-
-# print(height)
-
-# overaly=cv2.imread("upated.png")
-# overlay = cv2.resize(overaly, (640, height))
-
-# h,w=overlay.shape[:2]
-# print(overlay.shape,base2.shape)
-
-# y=300
-# x=xstartpointer
-# base2[y:y+h, x:x+w]=blender(overlay)
-
-# cv2.imshow('Blended.jpg', base2)
-# # cv2.imwrite('Blended2.jpg', blended)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
