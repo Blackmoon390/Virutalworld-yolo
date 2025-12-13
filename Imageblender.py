@@ -37,34 +37,7 @@ y1,y2,xstartpointer=size_ratio_fitter(base2.shape[:2])
 
 
 
-def blender2(overlay):
-    
-    # overlay = cv2.resize(overlay, (640, 500))
-    h,w=overlay.shape[:2]
-    y=300
-    x=520
 
-    base = base2[y:y+h, x:x+w]   
-
-    
-
-    lower_black = np.array([0, 0, 0], dtype=np.uint8)
-    upper_black = np.array([70, 10, 10], dtype=np.uint8)
-
-    mask = cv2.inRange(base, lower_black, upper_black)
-
-
-
-    mask = cv2.GaussianBlur(mask, (5,5), 0)
-
-
-    mask_3ch = cv2.merge([mask, mask, mask])
-    mask_3ch = mask_3ch / 255.0  # normalize to 0-1 for blending
-
-
-    blended = base * (1 - mask_3ch) + overlay * mask_3ch
-    blended = blended.astype(np.uint8)
-    return blended
 def blender(overlay):
     h, w = overlay.shape[:2]
 
