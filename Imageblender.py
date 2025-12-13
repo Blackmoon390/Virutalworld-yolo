@@ -9,8 +9,10 @@ def getcoordinatevalues():
             if line.startswith("Animationframesize="):
                 coordinates=line.split("=")
                 frame_ratio=coordinates[1].strip()
-                frame_ratio=int(frame_ratio)/100            
-    return frame_ratio
+                frame_ratio=int(frame_ratio)/100
+            if line.startswith("key="):
+                key=line.split("=")[1]      
+    return frame_ratio,key
             
 
 def resizer(framesize,fitvalue,newframe):
