@@ -17,8 +17,7 @@ bluecolour=cv2.cvtColor(bluecolour,cv2.COLOR_BGR2RGB)
 topheight=ib.y1
 bottomheight=ib.y2
 
-cam=cv2.VideoCapture(0) #"C:\Users\VISHNU\Videos\Screen Recordings\Screen Recording 2025-12-11 164606.mp4"
-
+cam=cv2.VideoCapture(0) 
 while cam.isOpened():
     _,frame=cam.read()
 
@@ -36,10 +35,7 @@ while cam.isOpened():
                    yolo_bbox = (x1, y1, x2, y2)
                    mask = tpm.resize_mask_height_only(mask, yolo_bbox,topheight,bottomheight) 
                 
-            
-             
 
-         
     person_mask_colour=tpm.apply_blue_black_noise(bluecolour, mask)
     glowframe=tpm.glow(mask)
    
