@@ -16,6 +16,12 @@ bluecolour=cv2.cvtColor(bluecolour,cv2.COLOR_BGR2RGB)
 
 topheight=ib.y1
 bottomheight=ib.y2
+key=ib.key
+
+if key is False:
+    ib.print_error()
+    
+
 
 cam=cv2.VideoCapture(0) 
 while cam.isOpened():
