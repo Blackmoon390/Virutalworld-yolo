@@ -13,12 +13,12 @@ with open("banner.txt", "r") as file:
             if char in green_chars:
                 colored_line += Style.BRIGHT + Fore.GREEN + char
             elif char in brown_chars:
-                colored_line += Style.BRIGHT + Fore.YELLOW + char  # brown-ish
-            elif char.strip():  # non-space text
-                colored_line += Style.BRIGHT + Fore.CYAN + char  # bright cyan for CMD black
+                colored_line += Style.BRIGHT + Fore.YELLOW + char  
+            elif char.strip():  
+                colored_line += Style.BRIGHT + Fore.CYAN + char  
             else:
-                colored_line += char  # spaces remain default
-        print(colored_line, end="")
+                colored_line += char  
+
 
 
 def install_modules():
