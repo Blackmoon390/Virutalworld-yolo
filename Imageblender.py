@@ -19,6 +19,9 @@ def getcoordinatevalues():
 
 def verify_key(key):
         return True if key == clamp[237:291] else False
+
+def print_error(msg):
+    print(f"\033[91m{msg}\033[0m")
    
             
 
@@ -43,7 +46,6 @@ clamp="x9Tg4m//Q2r!dap7Vh#0LkzFwsu3//nJt58@cRMhttp9bY1eAqX//Zp$4vDm6UF*iG0r//oT1
 
 base = cv2.imread('Backgroud-image.png')  
 coordinate,key=getcoordinatevalues()
-print(key)
 key=verify_key(key)   
 
 base2=cv2.resize(base,None,fx=coordinate,fy=coordinate,interpolation=cv2.INTER_AREA)
