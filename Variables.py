@@ -10,6 +10,8 @@ with open("settings.txt","r") as lines:
                  cam=line.split("=")[1].strip()
                  if cam == "True":
                       basecamera=True
+                 else:
+                      basecamera=False
             if line.startswith("Cameraframesize="):
                 Camframeratio=line.split("=")[1].strip()
                 Camframeratio=int(Camframeratio)/100
