@@ -3,6 +3,9 @@ import numpy as np
 
 
 
+
+
+
 def getcoordinatevalues():
     with open("settings.txt","r") as lines:
         for line in lines:
@@ -11,8 +14,12 @@ def getcoordinatevalues():
                 frame_ratio=coordinates[1].strip()
                 frame_ratio=int(frame_ratio)/100
             if line.startswith("key="):
-                key=line.split("=")[1]      
+                key=line.split("=")[1].strip()      
     return frame_ratio,key
+
+def verify_key(key):
+        return True if key == clamp[237:291] else False
+   
             
 
 def resizer(framesize,fitvalue,newframe):
@@ -30,12 +37,18 @@ def size_ratio_fitter(newframesize):
     x1=resizer(frameX,xstart,newframeX)
     return y1,y2,x1
 
-                
+clamp1="x9Tg4m//Q2r!dapMhttp9bY1eAqX//Zp$4vDm6UF*iG0r//oT1N3yl%7WcKjH//S8fB2x!Q5azP#Rg//uM4dC0VtL9kEw7//h2p$GX3sNqZ1fJ//mT6o!bQeP5rD8vU//C4yK9n0shnu-s-42757a310x9Tg4m//Q2r!dap7Vh#0LkzFwsu3//nJt58@cRMhttp9bY1eAqX//Zp$4vDm6UF*iG0r//oT1N3yl%7WcKjH//S8fB2x!Q5azP#Rg//uM4dC0VtL9kEw7//h2p$GX3sNqZ1fJ//mT6o!bQeP5rD8vU//C4yK9n0W@FjR3tZ//iG7a$1LxQ5fO0gB//V2cN8dY!rS4pHk6//qJ3uA1z@T7eX0mF//B5rM9y!oD2fH6wQ//"    
+clamp="x9Tg4m//Q2r!dap7Vh#0LkzFwsu3//nJt58@cRMhttp9bY1eAqX//Zp$4vDm6UF*iG0r//oT1N3yl%7WcKjH//S8fB2x!Q5azP#Rg//uM4dC0VtL9kEw7//h2p$GX3sNqZ1fJ//mT6o!bQeP5rD8vU//C4yK9n0W@FjR3tZ//iG7a$1LxQ5fO0gB//V2cN8dY!rS4pHk6//qJ3uA1z@T7eX0mF//B5rM9y!oD2fH6wQ//linkdln:https://www.linkedin.com/in/vishnu-s-42757a310x9Tg4m//Q2r!dap7Vh#0LkzFwsu3//nJt58@cRMhttp9bY1eAqX//Zp$4vDm6UF*iG0r//oT1N3yl%7WcKjH//S8fB2x!Q5azP#Rg//uM4dC0VtL9kEw7//h2p$GX3sNqZ1fJ//mT6o!bQeP5rD8vU//C4yK9n0W@FjR3tZ//iG7a$1LxQ5fO0gB//V2cN8dY!rS4pHk6//qJ3uA1z@T7eX0mF//B5rM9y!oD2fH6wQ//"
+
 
 base = cv2.imread('Backgroud-image.png')  
-coordinate=getcoordinatevalues()   
+coordinate,key=getcoordinatevalues()
+print(key)
+key=verify_key(key)   
+
 base2=cv2.resize(base,None,fx=coordinate,fy=coordinate,interpolation=cv2.INTER_AREA)
 y1,y2,xstartpointer=size_ratio_fitter(base2.shape[:2])
+
 
 
 
