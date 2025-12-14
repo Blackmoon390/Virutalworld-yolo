@@ -2,10 +2,9 @@ import cv2
 import numpy as np
 
 
-bluecolour=np.full((640,480,3),(24, 34, 200),dtype='uint8')
-bluecolour=cv2.cvtColor(bluecolour,cv2.COLOR_BGR2RGB)
 
-def apply_blue_black_noise(frame=bluecolour, mask=None, block=1):
+
+def apply_blue_black_noise(frame, mask, block=1):
     h, w = mask.shape[:2]  
 
     # --- Fix mask shape mismatch ----
