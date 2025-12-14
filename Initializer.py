@@ -1,4 +1,25 @@
 import sys
+from colorama import init, Fore, Style
+
+init(autoreset=True)
+
+green_chars = "@&%#"
+brown_chars = ".|=~;/\\"
+
+with open("banner.txt", "r") as file:
+    for line in file:
+        colored_line = ""
+        for char in line:
+            if char in green_chars:
+                colored_line += Style.BRIGHT + Fore.GREEN + char
+            elif char in brown_chars:
+                colored_line += Style.BRIGHT + Fore.YELLOW + char  # brown-ish
+            elif char.strip():  # non-space text
+                colored_line += Style.BRIGHT + Fore.CYAN + char  # bright cyan for CMD black
+            else:
+                colored_line += char  # spaces remain default
+        print(colored_line, end="")
+
 
 def install_modules():
     import subprocess
