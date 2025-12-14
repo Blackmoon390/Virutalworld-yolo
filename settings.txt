@@ -1,10 +1,16 @@
+
 Animationframesize=70
-Cameraframe=True
+Cameraframe=False
+#Reduce it if your screen getting lagging but max is best
+Cameraframesize=100  
+
+
 
 
 #dont change this area
 y1,y2=(120, 150)
 Installedlibraries=True
-#contact and key
+#contact
+
 github:https://github.com/Blackmoon390/Virutalworld-yolo
-linkdln:https://www.linkedin.com/in/vishnu-s-42757a310/
+key=linkdln:https://www.linkedin.com/in/vishnu-s-42757a310

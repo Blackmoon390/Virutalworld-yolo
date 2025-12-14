@@ -3,28 +3,13 @@ import numpy as np
 import Variables as vr
 
 
-
-
-
-
-def getcoordinatevalues():
-    with open("settings.txt","r") as lines:
-        for line in lines:
-            if line.startswith("Animationframesize="):
-                coordinates=line.split("=")
-                frame_ratio=coordinates[1].strip()
-                frame_ratio=int(frame_ratio)/100
-            if line.startswith("key="):
-                key=line.split("=")[1].strip()      
-    return frame_ratio,key
-
 def verify_key(key):
-        return True if key == clamp[237:291] else False
+        return True if key == vr.clamp[237:291] else False
 
 def print_error():
     print(f"\033[91mcredentials missing please replace a settings.txt file as default\033[0m")
     exit()
-   
+
             
 
 def resizer(framesize,fitvalue,newframe):
@@ -42,17 +27,14 @@ def size_ratio_fitter(newframesize):
     x1=resizer(frameX,xstart,newframeX)
     return y1,y2,x1
 
-clamp1="x9Tg4m//Q2r!dapMhttp9bY1eAqX//Zp$4vDm6UF*iG0r//oT1N3yl%7WcKjH//S8fB2x!Q5azP#Rg//uM4dC0VtL9kEw7//h2p$GX3sNqZ1fJ//mT6o!bQeP5rD8vU//C4yK9n0shnu-s-42757a310x9Tg4m//Q2r!dap7Vh#0LkzFwsu3//nJt58@cRMhttp9bY1eAqX//Zp$4vDm6UF*iG0r//oT1N3yl%7WcKjH//S8fB2x!Q5azP#Rg//uM4dC0VtL9kEw7//h2p$GX3sNqZ1fJ//mT6o!bQeP5rD8vU//C4yK9n0W@FjR3tZ//iG7a$1LxQ5fO0gB//V2cN8dY!rS4pHk6//qJ3uA1z@T7eX0mF//B5rM9y!oD2fH6wQ//"    
-clamp="x9Tg4m//Q2r!dap7Vh#0LkzFwsu3//nJt58@cRMhttp9bY1eAqX//Zp$4vDm6UF*iG0r//oT1N3yl%7WcKjH//S8fB2x!Q5azP#Rg//uM4dC0VtL9kEw7//h2p$GX3sNqZ1fJ//mT6o!bQeP5rD8vU//C4yK9n0W@FjR3tZ//iG7a$1LxQ5fO0gB//V2cN8dY!rS4pHk6//qJ3uA1z@T7eX0mF//B5rM9y!oD2fH6wQ//linkdln:https://www.linkedin.com/in/vishnu-s-42757a310x9Tg4m//Q2r!dap7Vh#0LkzFwsu3//nJt58@cRMhttp9bY1eAqX//Zp$4vDm6UF*iG0r//oT1N3yl%7WcKjH//S8fB2x!Q5azP#Rg//uM4dC0VtL9kEw7//h2p$GX3sNqZ1fJ//mT6o!bQeP5rD8vU//C4yK9n0W@FjR3tZ//iG7a$1LxQ5fO0gB//V2cN8dY!rS4pHk6//qJ3uA1z@T7eX0mF//B5rM9y!oD2fH6wQ//"
 
 
 base = cv2.imread('Backgroud-image.png')  
-coordinate,key=getcoordinatevalues()
-key=verify_key(key) 
+key=verify_key(vr.key) 
 bluecolour=np.full((640,480,3),(24, 34, 200),dtype='uint8')
 bluecolour=cv2.cvtColor(bluecolour,cv2.COLOR_BGR2RGB)  
 
-base2=cv2.resize(base,None,fx=coordinate,fy=coordinate,interpolation=cv2.INTER_AREA)
+base2=cv2.resize(base,None,fx=vr.frame_ratio,fy=vr.frame_ratio,interpolation=cv2.INTER_AREA)
 y1,y2,xstartpointer=size_ratio_fitter(base2.shape[:2])
 
 
@@ -77,10 +59,10 @@ def blender(overlay):
         h = H - y
         overlay = overlay[:h, :]
 
-    # crop base
+ 
     base = basemain[y:y+h, x:x+w]
 
-    # black detection
+  
     lower_black = np.array([0, 0, 0], dtype=np.uint8)
     upper_black = np.array([70, 10, 10], dtype=np.uint8)
 
@@ -92,7 +74,7 @@ def blender(overlay):
     blended = base * (1 - mask_3ch) + overlay * mask_3ch
     blended = blended.astype(np.uint8)
 
-    # write back safely
+    
     basemain[y:y+h, x:x+w] = blended
 
     return basemain
