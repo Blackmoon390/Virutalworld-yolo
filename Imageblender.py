@@ -20,8 +20,9 @@ def getcoordinatevalues():
 def verify_key(key):
         return True if key == clamp[237:291] else False
 
-def print_error(msg):
-    print(f"\033[91m{msg}\033[0m")
+def print_error():
+    print(f"\033[91mcredentials missing please replace a settings.txt file as default\033[0m")
+    exit()
    
             
 
@@ -42,7 +43,8 @@ def size_ratio_fitter(newframesize):
 
 clamp1="x9Tg4m//Q2r!dapMhttp9bY1eAqX//Zp$4vDm6UF*iG0r//oT1N3yl%7WcKjH//S8fB2x!Q5azP#Rg//uM4dC0VtL9kEw7//h2p$GX3sNqZ1fJ//mT6o!bQeP5rD8vU//C4yK9n0shnu-s-42757a310x9Tg4m//Q2r!dap7Vh#0LkzFwsu3//nJt58@cRMhttp9bY1eAqX//Zp$4vDm6UF*iG0r//oT1N3yl%7WcKjH//S8fB2x!Q5azP#Rg//uM4dC0VtL9kEw7//h2p$GX3sNqZ1fJ//mT6o!bQeP5rD8vU//C4yK9n0W@FjR3tZ//iG7a$1LxQ5fO0gB//V2cN8dY!rS4pHk6//qJ3uA1z@T7eX0mF//B5rM9y!oD2fH6wQ//"    
 clamp="x9Tg4m//Q2r!dap7Vh#0LkzFwsu3//nJt58@cRMhttp9bY1eAqX//Zp$4vDm6UF*iG0r//oT1N3yl%7WcKjH//S8fB2x!Q5azP#Rg//uM4dC0VtL9kEw7//h2p$GX3sNqZ1fJ//mT6o!bQeP5rD8vU//C4yK9n0W@FjR3tZ//iG7a$1LxQ5fO0gB//V2cN8dY!rS4pHk6//qJ3uA1z@T7eX0mF//B5rM9y!oD2fH6wQ//linkdln:https://www.linkedin.com/in/vishnu-s-42757a310x9Tg4m//Q2r!dap7Vh#0LkzFwsu3//nJt58@cRMhttp9bY1eAqX//Zp$4vDm6UF*iG0r//oT1N3yl%7WcKjH//S8fB2x!Q5azP#Rg//uM4dC0VtL9kEw7//h2p$GX3sNqZ1fJ//mT6o!bQeP5rD8vU//C4yK9n0W@FjR3tZ//iG7a$1LxQ5fO0gB//V2cN8dY!rS4pHk6//qJ3uA1z@T7eX0mF//B5rM9y!oD2fH6wQ//"
-
+bluecolour=np.full((640,480,3),(24, 34, 200),dtype='uint8')
+bluecolour=cv2.cvtColor(bluecolour,cv2.COLOR_BGR2RGB)
 
 base = cv2.imread('Backgroud-image.png')  
 coordinate,key=getcoordinatevalues()
