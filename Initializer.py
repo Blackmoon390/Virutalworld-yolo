@@ -13,11 +13,14 @@ with open("banner.txt", "r") as file:
             if char in green_chars:
                 colored_line += Style.BRIGHT + Fore.GREEN + char
             elif char in brown_chars:
-                colored_line += Style.BRIGHT + Fore.YELLOW + char  
-            elif char.strip():  
-                colored_line += Style.BRIGHT + Fore.CYAN + char  
+                colored_line += Style.BRIGHT + Fore.YELLOW + char
+            elif char.isalpha():  # letters only
+                colored_line += Style.BRIGHT + Fore.CYAN + char
+            elif char.strip():  # any other non-space symbols
+                colored_line += Style.BRIGHT + Fore.CYAN + char
             else:
-                colored_line += char  
+                colored_line += char  # spaces remain default
+        print(colored_line, end="")
 
 
 
