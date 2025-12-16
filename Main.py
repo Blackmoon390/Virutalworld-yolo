@@ -19,7 +19,7 @@ key=ib.key
 color=ib.bluecolour
 
 if key is False:
-    ib.print_error()
+    ib.print_error(vr.errormsg)
 
 
 instructimage=cv2.imread("instruction.png")
@@ -29,13 +29,11 @@ time.sleep(8)
 cv2.destroyAllWindows()
 
 print("press space key to exit()")
-
-
     
 cam=cv2.VideoCapture(vr.mainsource) 
 
 if not cam.isOpened():
-    raise Exception("Camera not accessible")
+    raise Exception(ib.print_error("Camera not accessible or path is invalid"))
 
 while cam.isOpened():
     _,frame=cam.read()

@@ -1,5 +1,5 @@
 #source if webcam put (0) or if video add videopath example "C:/path/video.mp4"
-source=0
+Source=0
 Animationframesize=70
 Cameraframe=False
 #Reduce it if your screen getting lagging but max is best
