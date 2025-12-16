@@ -1,4 +1,5 @@
-
+#source if webcam put (0) or if video add videopath example "C:/path/video.mp4"
+source=0
 Animationframesize=70
 Cameraframe=False
 #Reduce it if your screen getting lagging but max is best
@@ -9,7 +10,7 @@ Cameraframesize=100
 
 #dont change this area
 y1,y2=(120, 150)
-Installedlibraries=True
+Installedlibraries=False
 #contact
 
 github:https://github.com/Blackmoon390/Virutalworld-yolo
