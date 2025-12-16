@@ -6,8 +6,8 @@ import Variables as vr
 def verify_key(key):
         return True if key == vr.clamp[237:291] else False
 
-def print_error():
-    print(f"\033[91mcredentials missing please replace a settings.txt file as default\033[0m")
+def print_error(msg):
+    print(f"\033[91m{msg}\033[0m")
     exit()
 
             
