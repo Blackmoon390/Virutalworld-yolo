@@ -29,9 +29,14 @@ time.sleep(8)
 cv2.destroyAllWindows()
 
 print("press space key to exit()")
-    
 
-cam=cv2.VideoCapture(0) 
+
+    
+cam=cv2.VideoCapture(vr.mainsource) 
+
+if not cam.isOpened():
+    raise Exception("Camera not accessible")
+
 while cam.isOpened():
     _,frame=cam.read()
     frame=cv2.flip(frame,1)
